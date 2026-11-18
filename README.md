@@ -18,6 +18,8 @@ Il giocatore deve trasferire una pila di dischi dal primo al terzo perno, rispet
 
 L'interfaccia richiama l'estetica di uno strumento meccanico di fine Ottocento: ottone, legno, quadranti e finiture industriali.
 
+[Puoi giocarci qui](https://tagtthespellcaster.github.io/Apparatus-Tricolumnis/)
+
 ## Regole
 
 Il gioco utilizza tre perni e un numero variabile di dischi.
