@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#18251f">
+<title>Apparatus Tricolumnis — Officina degli Enigmi</title>
+<style>
+:root{
+  --ink:#241a12;--paper:#d8c39a;--paper2:#b99b6b;--muted:#8e7958;
+  --green:#31483d;--green2:#58705b;--red:#a94d32;--gold:#c28b3c;
+  --line:#80613b;--shadow:rgba(15,10,5,.35);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;color:var(--ink);
+  background:
+    radial-gradient(ellipse at 50% 15%,rgba(181,133,65,.18),transparent 50%),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 4px),
+    #171e1a;
+  font-family:Georgia,"Times New Roman",serif;
+  display:grid;place-items:center;padding:24px 14px;
+}
+.cabinet{
+  width:min(100%,940px);position:relative;padding:clamp(16px,3vw,31px);
+  color:#302316;background:
+    linear-gradient(135deg,rgba(255,255,255,.18),transparent 22%),
+    repeating-linear-gradient(90deg,rgba(75,48,21,.025) 0 2px,transparent 2px 5px),
+    #d9c49b;
+  border:8px ridge #98703a;
+  box-shadow:0 0 0 3px #34251a,0 0 0 7px #b58b4d,0 22px 55px #000a;
+}
+.cabinet:before,.cabinet:after{
+  content:"";position:absolute;width:15px;height:15px;border-radius:50%;
+  top:9px;background:radial-gradient(circle at 35% 30%,#f3d58c,#8c5b25 65%,#382516);
+  box-shadow:0 0 0 2px #65431f,0 0 4px #0008
+}
+.cabinet:before{left:9px}.cabinet:after{right:9px}
+header{text-align:center;border-bottom:3px double #967346;padding:5px 0 18px}
+.eyebrow{font-size:10px;letter-spacing:4px;color:#76512a;font-weight:bold;text-transform:uppercase}
+h1{
+  font-family:Georgia,serif;font-variant:small-caps;font-weight:normal;
+  font-size:clamp(29px,5vw,47px);line-height:1;margin:9px 0 7px;
+  letter-spacing:1px;text-shadow:1px 2px #f3e1bd,-1px -1px #9b8054;
+}
+.subtitle{font-size:11px;color:#695437;letter-spacing:2px;text-transform:uppercase}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:19px 0}
+.stats{display:flex;gap:9px;flex-wrap:wrap}
+.stat{
+  background:linear-gradient(145deg,#ead8b2,#bda477);border:2px ridge #987346;
+  padding:8px 12px;min-width:92px;text-align:center;box-shadow:inset 0 1px #fff8,2px 3px 4px #3d2b1a35
+}
+.stat small{display:block;font: bold 9px "Courier New",monospace;letter-spacing:1.5px;color:#705333}
+.stat strong{display:block;font: bold 20px "Courier New",monospace;margin-top:3px;color:#29382e;text-shadow:0 1px #fff7}
+.controls{display:flex;gap:8px;flex-wrap:wrap}
+button,select{
+  font:bold 10px "Courier New",monospace;letter-spacing:.8px;text-transform:uppercase;
+  border:2px ridge #a17a42;padding:10px 12px;color:#f1dfbb;
+  background:linear-gradient(#526452,#26392e);cursor:pointer;
+  box-shadow:0 3px 0 #241b12,0 4px 7px #0004;transition:transform .08s,filter .08s;
+}
+button:hover{filter:brightness(1.18)}
+button:active{transform:translateY(2px);box-shadow:0 1px 0 #241b12}
+button.primary{background:linear-gradient(#bd8b43,#785027);border-color:#d2ad6d;color:#fff0cf}
+button:disabled{opacity:.4;cursor:not-allowed;filter:grayscale(1)}
+.board{
+  position:relative;padding:22px 12px 15px;
+  border:7px ridge #9b713d;
+  background:
+    radial-gradient(ellipse at 50% 0%,#52634b55,transparent 70%),
+    repeating-linear-gradient(90deg,#00000009 0 2px,transparent 2px 6px),
+    #55412b;
+  box-shadow:inset 0 0 0 3px #2c2118,inset 0 0 24px #100b07,0 5px 10px #3b281a55;
+}
+.board:before{
+  content:"";position:absolute;inset:8px;border:1px solid #c19a5b77;
+  box-shadow:inset 0 0 0 2px #1d160e55;pointer-events:none
+}
+.pegs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;position:relative;z-index:1}
+.peg{
+  height:clamp(205px,35vw,300px);position:relative;display:flex;align-items:flex-end;
+  justify-content:center;cursor:pointer;outline:none;border:2px solid transparent;
+  border-radius:3px;padding:0 0 12px;
+}
+.peg:focus-visible{border-color:#e4bd70}
+.peg.selected{background:#d6b36a1c;border:2px dashed #e0b76b}
+.rod{
+  position:absolute;bottom:12px;width:13px;height:calc(100% - 39px);
+  background:linear-gradient(90deg,#563719,#d6ad62 27%,#f0d28b 48%,#805322 76%,#3d2816);
+  border:1px solid #3c2916;border-radius:7px 7px 1px 1px;z-index:0;
+  box-shadow:2px 0 4px #0007
+}
+.rod:before{content:"";position:absolute;top:-7px;left:-4px;width:19px;height:9px;border-radius:50%;background:radial-gradient(ellipse,#f4d38a,#93632c 65%,#392414)}
+.base{
+  position:absolute;bottom:8px;width:90%;height:16px;
+  background:linear-gradient(#e2c17e,#a4773c 45%,#52351c);
+  border:2px ridge #6d4825;border-radius:4px;z-index:1;
+  box-shadow:0 4px 5px #0007
+}
+.disks{position:absolute;bottom:22px;left:0;right:0;display:flex;flex-direction:column-reverse;align-items:center;z-index:2;pointer-events:none}
+.disk{
+  height:clamp(19px,3vw,25px);border:2px solid #3d2a17;border-radius:5px 5px 3px 3px;
+  margin-top:2px;box-shadow:inset 0 3px 2px #fff6,inset 0 -3px 3px #24150988,0 2px 2px #0008;
+  position:relative;transition:width .15s
+}
+.disk:after{
+  content:"";position:absolute;left:8%;right:8%;top:3px;height:2px;
+  background:#fff8;border-radius:50%;box-shadow:0 0 3px #fff7
+}
+.peg-label{
+  position:absolute;bottom:-10px;left:0;right:0;text-align:center;
+  font:bold 11px "Courier New",monospace;letter-spacing:3px;color:#e3c58b;
+  text-shadow:0 2px 3px #000
+}
+.hintline{min-height:30px;text-align:center;padding:14px 4px 0;font:12px Georgia,serif;color:#60482b}
+.hintline strong{color:var(--green)}
+.bottom{display:flex;justify-content:space-between;gap:15px;align-items:center;flex-wrap:wrap;margin-top:18px}
+.difficulty{display:flex;align-items:center;gap:9px;font:bold 10px "Courier New",monospace;letter-spacing:1px;color:#60482b}
+select{padding:9px;background:linear-gradient(#526452,#26392e);color:#f1dfbb}
+.best{font:10px "Courier New",monospace;color:#6b5536;text-align:right;line-height:1.7}
+.best strong{color:#29382e}
+footer{
+  border-top:3px double #967346;margin-top:19px;padding-top:12px;
+  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  font:9px "Courier New",monospace;color:#806644;letter-spacing:1.5px
+}
+.win{color:#923d27;font-weight:bold}
+
+/* Schermata introduttiva: mantiene visibile il gioco sottostante, ma ne blocca l'interazione. */
+.intro-overlay{
+  position:absolute;inset:0;z-index:20;display:grid;place-items:center;
+  padding:24px;
+  background:rgba(5,13,9,.79);
+  backdrop-filter:blur(1.5px);
+  -webkit-backdrop-filter:blur(1.5px);
+  transition:opacity .35s ease,visibility .35s ease;
+}
+.intro-overlay.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
+.intro-panel{
+  width:min(100%,470px);text-align:center;color:#ead5a8;
+  padding:clamp(18px,4vw,34px);
+  background:linear-gradient(180deg,rgba(17,35,26,.78),rgba(10,22,16,.68));
+  border-top:1px solid #c49a58;border-bottom:1px solid #c49a58;
+  box-shadow:0 0 0 1px #65492366,0 12px 35px #0008;
+}
+.intro-panel h2{
+  margin:0 0 16px;font-variant:small-caps;font-size:clamp(25px,5vw,34px);
+  color:#f0d69f;text-shadow:0 2px 4px #000;
+}
+.intro-panel p{
+  margin:0 auto 22px;max-width:390px;
+  font-size:clamp(15px,2.5vw,18px);line-height:1.5;color:#e1cfaa;
+  text-shadow:0 1px 3px #000;
+}
+.intro-panel button{
+  min-width:220px;padding:15px 20px;font-size:13px;
+  border:3px ridge #d5ad69;
+  background:linear-gradient(#c7964b,#825727);
+  color:#fff0cc;box-shadow:0 3px 0 #24170d,0 5px 12px #0008;
+}
+@media(max-width:520px){
+  .intro-overlay{padding:14px}
+  .intro-panel{padding:23px 15px}
+}
+@media(max-width:520px){
+  body{padding:12px 8px}.cabinet{padding:15px 11px;border-width:5px}
+  .topbar{margin:13px 0}.stat{min-width:75px;padding:7px 8px}.stat strong{font-size:17px}
+  .controls{width:100%}.controls button{flex:1;padding:9px 6px;font-size:9px}
+  .board{padding:16px 4px 13px}.peg{height:230px}.disk{height:19px}
+  .bottom{align-items:flex-start}.best{text-align:left}
+}
+
+.audio-credit{display:block;flex-basis:100%;margin-top:9px;font:10px "Courier New",monospace;letter-spacing:.3px;text-transform:none;color:#705333}
+.audio-credit a{color:#62401f;text-decoration:underline}
+#musicToggle[aria-pressed="false"],#effectsToggle[aria-pressed="false"]{filter:grayscale(.75);opacity:.72}
+@media(max-width:520px){.controls{width:100%}.controls button{flex:1 1 auto}}
+</style>
+</head>
+<body>
+<main class="cabinet">
+  <section class="intro-overlay" id="introOverlay" role="dialog" aria-modal="true" aria-labelledby="introTitle">
+    <div class="intro-panel">
+      <h2 id="introTitle">La macchina è pronta</h2>
+      <p>La macchina attende il tuo comando. Premi il pulsante per avviare il meccanismo.</p>
+      <button id="startMachine" class="primary" type="button">AVVIA LA MACCHINA</button>
+    </div>
+  </section>
+  <header>
+    <div class="eyebrow">OFFICINA MECCANICA · REPARTO ENIGMI</div>
+    <h1>Apparatus Tricolumnis</h1>
+    <div class="subtitle">SPOSTA LA TORRE. UN DISCO ALLA VOLTA.</div>
+  </header>
+
+  <section class="topbar" aria-label="Statistiche e comandi">
+    <div class="stats">
+      <div class="stat"><small>MOSSE</small><strong id="moves">0</strong></div>
+      <div class="stat"><small>MINIMO</small><strong id="minimum">127</strong></div>
+      <div class="stat"><small>TEMPO</small><strong id="time">00:00</strong></div>
+    </div>
+    <div class="controls">
+      <button id="undo" disabled>↶ ANNULLA</button>
+      <button id="reset">↻ RICOMINCIA</button>
+      <button id="new" class="primary">NUOVA PARTITA</button>
+      <button id="musicToggle" type="button" aria-pressed="true">♫ MUSICA: ON</button>
+      <button id="effectsToggle" type="button" aria-pressed="true">⚙ EFFETTI: ON</button>
+    </div>
+  </section>
+
+  <section class="board" aria-label="Area di gioco">
+    <div class="pegs" id="pegs">
+      <div class="peg" data-peg="0" tabindex="0" role="button" aria-label="Perno A">
+        <div class="rod"></div><div class="base"></div><div class="disks" id="stack0"></div><div class="peg-label">A</div>
+      </div>
+      <div class="peg" data-peg="1" tabindex="0" role="button" aria-label="Perno B">
+        <div class="rod"></div><div class="base"></div><div class="disks" id="stack1"></div><div class="peg-label">B</div>
+      </div>
+      <div class="peg" data-peg="2" tabindex="0" role="button" aria-label="Perno C">
+        <div class="rod"></div><div class="base"></div><div class="disks" id="stack2"></div><div class="peg-label">C</div>
+      </div>
+    </div>
+  </section>
+  <div class="hintline" id="message" aria-live="polite">Seleziona un perno per sollevare il disco superiore, poi scegli la destinazione.</div>
+
+  <section class="bottom">
+    <label class="difficulty">DISCHI
+      <select id="diskCount" aria-label="Numero di dischi">
+        <option value="3">3 — FACILE</option>
+        <option value="4">4 — NORMALE</option>
+        <option value="5" selected>5 — CLASSICO</option>
+        <option value="6">6 — ESPERTO</option>
+        <option value="7">7 — AVANZATO</option>
+        <option value="8">8 — MAESTRO</option>
+      </select>
+    </label>
+    <div class="best">RECORD PERSONALE<br><strong id="best">—</strong></div>
+  </section>
+  <footer>
+    <span>OFFICINA DEGLI ENIGMI · Machina N° 001</span>
+    <span>BREVETTO MECCANICO 1.4.1 – 1894</span>
+    <span class="audio-credit">Musica: <a href="https://pixabay.com/users/luis_humanoide-12661853/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=183196" target="_blank" rel="noopener noreferrer">Luis Humanoide</a> da <a href="https://pixabay.com/music//?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=183196" target="_blank" rel="noopener noreferrer">Pixabay</a></span>
+  </footer>
+  <audio id="backgroundMusic" preload="auto" loop src="orchestra.mp3"></audio>
+</main>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const colors = ['#d16b4d','#d6a84f','#78936d','#6389a0','#9a789e','#c58b58','#718b83','#b86f6d'];
+  let count = 7, pegs = [], moves = 0, selected = null, history = [];
+  let startedAt = null, elapsedBefore = 0, timer = null, won = false;
+
+  // Effetti sonori sintetizzati con Web Audio: nessun file esterno.
+  let audioContext = null;
+  let effectsEnabled = true;
+  let musicEnabled = true;
+  const backgroundMusic = $('backgroundMusic');
+  const musicToggle = $('musicToggle');
+  const effectsToggle = $('effectsToggle');
+
+  function updateAudioButtons(){
+    musicToggle.textContent = musicEnabled ? '♫ MUSICA: ON' : '♫ MUSICA: OFF';
+    effectsToggle.textContent = effectsEnabled ? '⚙ EFFETTI: ON' : '⚙ EFFETTI: OFF';
+    musicToggle.setAttribute('aria-pressed', String(musicEnabled));
+    effectsToggle.setAttribute('aria-pressed', String(effectsEnabled));
+  }
+  function startMusic(){
+    if(!musicEnabled) return;
+    const result = backgroundMusic.play();
+    if(result && typeof result.catch === 'function') result.catch(()=>{});
+  }
+  musicToggle.addEventListener('click',()=>{
+    musicEnabled = !musicEnabled;
+    if(musicEnabled) startMusic();
+    else backgroundMusic.pause();
+    updateAudioButtons();
+  });
+  effectsToggle.addEventListener('click',()=>{
+    effectsEnabled = !effectsEnabled;
+    updateAudioButtons();
+  });
+  // L'avvio esplicito è un gesto dell'utente: sblocca la riproduzione audio nei browser.
+  const introOverlay = $('introOverlay');
+  $('startMachine').addEventListener('click',()=>{
+    startMusic();
+    introOverlay.classList.add('is-hidden');
+    introOverlay.setAttribute('aria-hidden','true');
+    $('undo').focus({preventScroll:true});
+  });
+  updateAudioButtons();
+
+  function audio(){
+    if(!effectsEnabled) return null;
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if(!AudioContext) return null;
+    if(!audioContext) audioContext = new AudioContext();
+    if(audioContext.state === 'suspended') audioContext.resume();
+    return audioContext;
+  }
+  function tone(ctx, frequency, start, duration, volume, type='sine', endFrequency=null){
+    const osc=ctx.createOscillator(), gain=ctx.createGain();
+    osc.type=type;
+    osc.frequency.setValueAtTime(frequency,start);
+    if(endFrequency!==null) osc.frequency.exponentialRampToValueAtTime(endFrequency,start+duration);
+    gain.gain.setValueAtTime(0.0001,start);
+    gain.gain.exponentialRampToValueAtTime(volume,start+0.008);
+    gain.gain.exponentialRampToValueAtTime(0.0001,start+duration);
+    osc.connect(gain);gain.connect(ctx.destination);
+    osc.start(start);osc.stop(start+duration+0.02);
+  }
+  function soundSelect(){
+    const ctx=audio();if(!ctx)return;
+    const t=ctx.currentTime;
+    // Breve scatto metallico, come un nottolino che aggancia il meccanismo.
+    tone(ctx,1050,t,0.055,0.045,'triangle',720);
+    tone(ctx,1580,t+0.012,0.075,0.018,'sine',1120);
+  }
+  function soundRelease(){
+    const ctx=audio();if(!ctx)return;
+    const t=ctx.currentTime;
+    // Impatto di ottone e legno con una piccola risonanza.
+    tone(ctx,230,t,0.11,0.075,'triangle',115);
+    tone(ctx,620,t+0.012,0.19,0.035,'sine',390);
+    tone(ctx,1180,t+0.018,0.075,0.012,'triangle',760);
+  }
+
+  const minMoves = n => Math.pow(2,n)-1;
+  const formatTime = seconds => {
+    const m = Math.floor(seconds/60), s = seconds%60;
+    return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  };
+  const elapsed = () => elapsedBefore + (startedAt ? Math.floor((Date.now()-startedAt)/1000) : 0);
+
+  function startClock(){
+    if (!startedAt && !won) startedAt = Date.now();
+    if (!timer) timer = setInterval(() => $('time').textContent = formatTime(elapsed()), 500);
+  }
+  function stopClock(){
+    if (timer){clearInterval(timer);timer=null;}
+    if(startedAt){elapsedBefore += Math.floor((Date.now()-startedAt)/1000);startedAt=null;}
+    $('time').textContent = formatTime(elapsedBefore);
+  }
+  function init(){
+    count = Number($('diskCount').value);
+    pegs = [Array.from({length:count},(_,i)=>count-i),[],[]];
+    moves=0; selected=null; history=[]; won=false; startedAt=null; elapsedBefore=0;
+    if(timer){clearInterval(timer);timer=null;}
+    $('time').textContent='00:00';
+    $('message').textContent='Seleziona un perno per sollevare il disco superiore, poi scegli la destinazione.';
+    $('message').classList.remove('win');
+    render();
+  }
+  function render(){
+    for(let p=0;p<3;p++){
+      const stack=$('stack'+p); stack.innerHTML='';
+      pegs[p].forEach(size=>{
+        const disk=document.createElement('div');
+        disk.className='disk';
+        disk.style.width=(26 + (size/count)*66)+'%';
+        disk.style.background=`linear-gradient(180deg,${colors[(size-1)%colors.length]},${shade(colors[(size-1)%colors.length],-24)})`;
+        disk.title=`Disco ${size}`;
+        stack.appendChild(disk);
+      });
+    }
+    document.querySelectorAll('.peg').forEach(el=>{
+      el.classList.toggle('selected',Number(el.dataset.peg)===selected);
+    });
+    $('moves').textContent=moves;
+    $('minimum').textContent=minMoves(count);
+    $('undo').disabled=history.length===0 || won;
+    updateBestLabel();
+  }
+  function shade(hex, amount){
+    const n=parseInt(hex.slice(1),16);
+    const r=Math.max(0,Math.min(255,(n>>16)+amount));
+    const g=Math.max(0,Math.min(255,((n>>8)&255)+amount));
+    const b=Math.max(0,Math.min(255,(n&255)+amount));
+    return '#'+(1<<24|r<<16|g<<8|b).toString(16).slice(1);
+  }
+  function updateBestLabel(){
+    const best=localStorage.getItem('hanoi-best-'+count);
+    $('best').textContent=best ? `${best} MOSSE` : '—';
+  }
+  function choose(peg){
+    if(won)return;
+    const top=pegs[peg][pegs[peg].length-1];
+    if(selected===null){
+      if(top===undefined){say('Questo perno è vuoto. Seleziona un disco da spostare.');return;}
+      selected=peg; soundSelect(); say(`Disco ${top} selezionato. Scegli il perno di destinazione.`); render(); return;
+    }
+    if(selected===peg){selected=null;say('Selezione annullata.');render();return;}
+    const disk=pegs[selected][pegs[selected].length-1];
+    if(top!==undefined && top<disk){say('Mossa non valida: non puoi collocare un disco grande sopra uno più piccolo.');return;}
+    history.push({pegs:pegs.map(a=>a.slice()),moves});
+    pegs[peg].push(pegs[selected].pop());
+    soundRelease();
+    moves++; selected=null; startClock(); render();
+    if(pegs[2].length===count){
+      won=true;stopClock();
+      $('message').innerHTML=`<span class="win">TORRE COMPLETATA!</span> Hai risolto il puzzle in ${moves} mosse e ${formatTime(elapsedBefore)}.`;
+      $('message').classList.add('win');
+      const key='hanoi-best-'+count, old=Number(localStorage.getItem(key)||Infinity);
+      if(moves<old)localStorage.setItem(key,String(moves));
+      render();
+    }else say('Mossa eseguita. Continua.');
+  }
+  function say(text){$('message').textContent=text;$('message').classList.remove('win');}
+  document.querySelectorAll('.peg').forEach(el=>{
+    el.addEventListener('click',()=>choose(Number(el.dataset.peg)));
+    el.addEventListener('keydown',e=>{
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();choose(Number(el.dataset.peg));}
+    });
+  });
+  $('undo').addEventListener('click',()=>{
+    if(!history.length||won)return;
+    const previous=history.pop();pegs=previous.pegs;moves=previous.moves;selected=null;
+    say('Ultima mossa annullata.');render();
+    if(moves===0){stopClock();elapsedBefore=0;$('time').textContent='00:00';}
+  });
+  $('reset').addEventListener('click',init);
+  $('new').addEventListener('click',init);
+  $('diskCount').addEventListener('change',init);
+  init();
+})();
+</script>
+</body>
+</html>
